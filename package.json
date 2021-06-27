@@ -9,7 +9,9 @@
   },
   "dependencies": {
     "express": "^4.17.1",
-    "helmet": "^4.6.0"
+    "helmet": "^4.6.0",
+    "mongodb": "^3.6.9",
+    "vercel": "^23.0.1"
   },
   "keywords": [
     "vercel"
