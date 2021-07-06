@@ -1,16 +1,5 @@
 {
   "version": 2,
   "builds": [{ "src": "app.js", "use": "@now/node" }],
-  "routes": [{ "src": "(.*)", "dest": "app.js" }],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "access-control-allow-origin",
-          "value": "*"
-        }
-      ]
-    }
-  ]
+  "routes": [{ "src": "(.*)", "dest": "app.js" }]
 }
