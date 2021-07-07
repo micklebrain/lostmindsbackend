@@ -1,8 +1,12 @@
 const { Router } = require('express');
 const { SuccessResponseObject } = require('../common/http');
 const demo = require('./demo.route');
+var cors = require('cors')
 
 const r = Router();
+
+// Resolve cors
+r.use(cors())
 
 // r.use('/demo', demo);
 r.use('/demo', (req, res) => {
