@@ -9,7 +9,7 @@ const r = Router();
 r.use(cors())
 
 // r.use('/demo', demo);
-r.use('/demo', (req, res) => {
+r.get('/demo', (req, res) => {
     const { MongoClient } = require('mongodb');
     const uri = "mongodb+srv://whiterose:avengers21@cluster0.uimrt.mongodb.net/test?retryWrites=true&w=majority";
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -25,7 +25,7 @@ r.use('/demo', (req, res) => {
     });
 });
 
-r.use('/resturants', (req, res) => {
+r.get('/resturants', (req, res) => {
     const { MongoClient } = require('mongodb');
     const uri = "mongodb+srv://whiterose:avengers21@cluster0.uimrt.mongodb.net/test?retryWrites=true&w=majority";
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
