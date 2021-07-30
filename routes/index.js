@@ -13,10 +13,8 @@ r.get('/demo', (req, res) => {
     const { MongoClient } = require('mongodb');
     const uri = "mongodb+srv://whiterose:avengers21@cluster0.uimrt.mongodb.net/test?retryWrites=true&w=majority";
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-    console.log(client);
     client.connect(err => {
         console.log("error: " + err);
-        console.log("Reading from collection");
         var resturant = { name: "Obao"};
         client.db("test").collection("resturants").insertOne(resturant, function(err, res) {
             if (err) throw err;               
@@ -29,11 +27,9 @@ r.get('/resturants', (req, res) => {
     const { MongoClient } = require('mongodb');
     const uri = "mongodb+srv://whiterose:avengers21@cluster0.uimrt.mongodb.net/test?retryWrites=true&w=majority";
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-    console.log(client);
     client.connect(err => {
         console.log("error: " + err);
-        console.log("Reading from collection");
-        console.log(client.db("test").collection("resturants").find().toArray().then(doc => res.json({doc})));        
+        client.db("test").collection("resturants").find({ city: 'New York City' }).toArray().then(doc => res.json({doc}));           
     });
 });
 
