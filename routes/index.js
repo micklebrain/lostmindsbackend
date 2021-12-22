@@ -34,6 +34,16 @@ r.get('/resturants/:city', (req, res) => {
     });
 });
 
+r.get('/boroughresturants/', (req, res) => {
+    const { MongoClient } = require('mongodb');
+    const uri = "mongodb+srv://whiterose:avengers21@cluster0.uimrt.mongodb.net/test?retryWrites=true&w=majority";
+    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    client.connect(err => {
+        console.log("error: " + err);               
+        client.db("test").collection("topresturantsboroughs").find({}).toArray().then(doc => res.json({doc}));           
+    });
+});
+
 
 r.get('/', (req, res) => {
     res.json(new SuccessResponseObject('express vercel boiler plate'));
