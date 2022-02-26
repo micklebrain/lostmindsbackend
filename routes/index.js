@@ -40,7 +40,7 @@ r.get('/neighborhoodresturants/', (req, res) => {
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     client.connect(err => {
         console.log("error: " + err);               
-        client.db("test").collection("neighborhoodresturants").find({}).toArray().then(doc => res.json({doc}));           
+        client.db("test").collection("topneighborhoodresturants").find({}).toArray().then(doc => res.json({doc}));           
     });
 });
 
