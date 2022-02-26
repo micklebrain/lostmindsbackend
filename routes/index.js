@@ -34,13 +34,13 @@ r.get('/resturants/:city', (req, res) => {
     });
 });
 
-r.get('/neighborhoodresturants/', (req, res) => {
+r.get('/neighborhoodresturants/:city', (req, res) => {
     const { MongoClient } = require('mongodb');
     const uri = "mongodb+srv://whiterose:avengers21@cluster0.uimrt.mongodb.net/test?retryWrites=true&w=majority";
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     client.connect(err => {
         console.log("error: " + err);               
-        client.db("test").collection("topneighborhoodresturants").find({}).toArray().then(doc => res.json({doc}));           
+        client.db("test").collection("topneighborhoodresturants").find({ city: city }).toArray().then(doc => res.json({doc}));           
     });
 });
 
