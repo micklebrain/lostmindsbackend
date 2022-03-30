@@ -45,6 +45,17 @@ r.get('/neighborhoodresturants/:city', (req, res) => {
     });
 });
 
+r.get('/events/:city', (req, res) => {
+    const { MongoClient } = require('mongodb');
+    const uri = "mongodb+srv://whiterose:avengers21@cluster0.uimrt.mongodb.net/test?retryWrites=true&w=majority";
+    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    client.connect(err => {
+        console.log("error: " + err);
+        var city = '' + req.params.city
+        client.db("test").collection("events").find({ city: city }).toArray().then(doc => res.json({doc}));           
+    });
+});
+
 
 r.get('/', (req, res) => {
     res.json(new SuccessResponseObject('express vercel boiler plate'));
