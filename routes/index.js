@@ -5,7 +5,6 @@ var cors = require('cors')
 
 const r = Router();
 
-// const stripe = require("stripe")('sk_test_51Kr8zwCrXyNi8bG6P9SuyD2PZ3LvelPqFjsJysI4rAnz8Y41cJdC5sN5HhdaefKvegsD7HbAfEKuldxT6rg1zgfd00XbGRmXxL');
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
 
 require('dotenv').config();
@@ -78,7 +77,7 @@ const calculateOrderAmount = (items) => {
     // Replace this constant with a calculation of the order's amount
     // Calculate the order total on the server to prevent
     // people from directly manipulating the amount on the client
-    return 500;
+    return 100;
 };
 
 r.post('/create-payment-intent', async (req, res) => {
