@@ -5,7 +5,6 @@ var cors = require('cors')
 
 const r = Router();
 
-// const stripe = require("stripe")('sk_test_51Kr8zwCrXyNi8bG6P9SuyD2PZ3LvelPqFjsJysI4rAnz8Y41cJdC5sN5HhdaefKvegsD7HbAfEKuldxT6rg1zgfd00XbGRmXxL');
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
 
 require('dotenv').config();
@@ -71,6 +70,22 @@ r.get('/payment/:paymentintent', async (req, res) => {
     );
     // const paymentIntentJson = JSON.parse(paymentIntent)
     // console.log(paymentIntentJson['paid']);
+    res.json(paymentIntent);
+});
+
+r.post('/createCustomer/:email', async (req, res) => {
+    const customer = await stripe.customers.create({
+        description: 'My First Test Customer (created for API docs)',
+        email: req.params.email
+    });
+    res.json(customer);
+});
+
+r.post('/updatePayment/:customerId/:paymentIntent', async (req, res) => {
+    const paymentIntent = await stripe.paymentIntents.update(
+        req.params.paymentIntent,
+        {customer: req.params.customerId}
+      );
     res.json(paymentIntent);
 });
 
