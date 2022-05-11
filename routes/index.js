@@ -73,6 +73,35 @@ r.get('/payment/:paymentintent', async (req, res) => {
     res.json(paymentIntent);
 });
 
+var nodemailer = require('nodemailer');
+
+r.post('/sendemail', async (req, res) => {
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'bordersgone@gmail.com',
+            pass: 'Avengers56'
+        }
+    });
+
+    var mailOptions = {
+        from: 'bordersgone@gmail.com',
+        to: 'micklebrain@gmail.com',
+        subject: 'Day trip order',
+        text: 'That was easy!',
+        html: "<div > <h1> Day trip in NYC </h1> <ul> <h1>Morning</h1> <h2>Breakfast</h2> <li>7am - Le Pain Quotidien</li><li>9am - Walk highline</li><li>11am - Chelsea Market</li><h1>Afternoon </h1> <h2>Lunch </h2> <li>12pm - Obao</li><li>2pm - Vessel</li><li>4pm - Empire State Building</li><h2>Dinner </h2> <li>6pm - Barn Joo NoMad</li><h2>Dessert </h2> <li>8pm - Venchi</li><h1>Nightlife</h1> <h2>Play </h2> <li>9pm Dave and Buster</li><h2>Drinks - Speakeasy</h2> <li>12am Dear Irving Gramercy</li><h2>Dance</h2> <li>2am Mission nightclub</li></ul> </div>"
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+            res.json(new SuccessResponseObject('email sent'));
+        }
+    });
+});
+
 const calculateOrderAmount = (items) => {
     // Replace this constant with a calculation of the order's amount
     // Calculate the order total on the server to prevent
@@ -96,7 +125,5 @@ r.post('/create-payment-intent', async (req, res) => {
         clientSecret: paymentIntent.client_secret,
     });
 });
-
-
 
 module.exports = r;
