@@ -73,6 +73,22 @@ r.get('/payment/:paymentintent', async (req, res) => {
     res.json(paymentIntent);
 });
 
+r.post('/createCustomer/:email', async (req, res) => {
+    const customer = await stripe.customers.create({
+        description: 'My First Test Customer (created for API docs)',
+        email: req.params.email
+    });
+    res.json(customer);
+});
+
+r.post('/updatePayment/:customerId/:paymentIntent', async (req, res) => {
+    const paymentIntent = await stripe.paymentIntents.update(
+        req.params.paymentIntent,
+        {customer: req.params.customerId}
+      );
+    res.json(paymentIntent);
+});
+
 var nodemailer = require('nodemailer');
 
 r.post('/sendemail', async (req, res) => {
