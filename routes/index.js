@@ -84,8 +84,8 @@ r.post('/createCustomer/:email', async (req, res) => {
 r.post('/updatePayment/:customerId/:paymentIntent', async (req, res) => {
     const paymentIntent = await stripe.paymentIntents.update(
         req.params.paymentIntent,
-        {customer: req.params.customerId}
-      );
+        { customer: req.params.customerId }
+    );
     res.json(paymentIntent);
 });
 
@@ -140,6 +140,42 @@ r.post('/create-payment-intent', async (req, res) => {
     res.send({
         clientSecret: paymentIntent.client_secret,
     });
+});
+
+r.post('/test', async (req, res) => {
+    const customer = await stripe.customers.create({
+        email: 'michael@gmail.com',
+        name: 'Michael Scott',
+    });
+
+    // const lineItem = await stripe.invoiceItems.create({ 
+    //     customer: customer.id, 
+    //     amount: 50000, 
+    //     currency: 'usd', 
+    // });
+
+    const invoice = await stripe.invoices.create({
+        // customer: customer.id,
+        customer: 'cus_LhfTAOnACcF95C',
+        pending_invoice_items_behavior: 'exclude',
+        days_until_due: 7,
+        collection_method: 'send_invoice'
+    });
+
+    const invoice_item = await stripe.invoiceItems.create({
+        customer: 'cus_LhfTAOnACcF95C',
+        invoice: invoice.id,
+        price_data: {
+            'currency': 'usd',
+            'unit_amount': 5000,
+            // 'tax_behavior': 'exclusive',
+            'product': 'prod_LhUHNr233iT3nO'
+        }
+    })
+
+    await stripe.invoices.sendInvoice(invoice.id);
+
+    res.json(new SuccessResponseObject('invoice sent'));
 });
 
 module.exports = r;
