@@ -196,12 +196,16 @@ r.post('/addEvent', async (req, res) => {
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     client.connect(err => {
         console.log("error: " + err);
-        var resturant = { name: "Blast" };
-        client.db("test").collection("itinerary").insertOne(resturant, function (err, res) {
+        var event = { 
+            email: req.body.email,
+            name: req.body.name,
+            date: new Date(req.body.date)
+        };
+        client.db("test").collection("itinerary").insertOne(event, function (err, res) {
             if (err) throw err;
-            client.close();
-            res.json({"happy": "test"});
+            client.close();            
         });
+        res.json({"happy": "test"});
     });
 });
 
