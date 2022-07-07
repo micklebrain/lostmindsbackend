@@ -2,9 +2,7 @@ const { Router } = require('express');
 const { SuccessResponseObject } = require('../common/http');
 const demo = require('./demo.route');
 var cors = require('cors')
-
 const r = Router();
-
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
 
 require('dotenv').config();
@@ -16,7 +14,6 @@ r.get('/', (req, res) => {
     res.json(new SuccessResponseObject('express vercel boiler plate'));
 });
 
-// r.use('/demo', demo);
 r.get('/demo', (req, res) => {
     const { MongoClient } = require('mongodb');
     const uri = "mongodb+srv://whiterose:avengers21@cluster0.uimrt.mongodb.net/test?retryWrites=true&w=majority";
@@ -178,18 +175,6 @@ r.post('/test', async (req, res) => {
     res.json(new SuccessResponseObject('invoice sent'));
 });
 
-r.get('/userEvents/:email', (req, res) => {
-    const { MongoClient } = require('mongodb');
-    const uri = "mongodb+srv://whiterose:avengers21@cluster0.uimrt.mongodb.net/test?retryWrites=true&w=majority";
-    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-    client.connect(err => {
-        console.log("error: " + err);    
-        var email = '' + req.params.email
-        client.db("test").collection("itinerary").find({ email: "nathanthainguyen@gmail.com" }).toArray().then(doc => res.json({ doc }));
-        // client.db("test").collection("itinerary").find().toArray().then(doc => res.json({ doc }));
-    });
-});
-
 r.post('/addEvent', async (req, res) => {
     const { MongoClient } = require('mongodb');
     const uri = "mongodb+srv://whiterose:avengers21@cluster0.uimrt.mongodb.net/test?retryWrites=true&w=majority";
@@ -206,6 +191,17 @@ r.post('/addEvent', async (req, res) => {
             client.close();            
         });
         res.json({"happy": "test"});
+    });
+});
+
+r.get('/userEvents/:email', (req, res) => {
+    const { MongoClient } = require('mongodb');
+    const uri = "mongodb+srv://whiterose:avengers21@cluster0.uimrt.mongodb.net/test?retryWrites=true&w=majority";
+    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    client.connect(err => {
+        console.log("error: " + err);    
+        var email = '' + req.params.email
+        client.db("test").collection("itinerary").find({ email: email }).toArray().then(doc => res.json({ doc }));
     });
 });
 
