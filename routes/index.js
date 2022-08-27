@@ -178,6 +178,17 @@ r.post('/test', async (req, res) => {
     res.json(new SuccessResponseObject('invoice sent'));
 });
 
+r.get('/users/:email', (req, res) => {
+    const { MongoClient } = require('mongodb');
+    const uri = "mongodb+srv://whiterose:avengers21@cluster0.uimrt.mongodb.net/test?retryWrites=true&w=majority";
+    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    client.connect(err => {
+        console.log("error: " + err);    
+        var email = '' + req.params.email
+        client.db("test").collection("users").find({ email: "micklebrain@gmail.com" }).toArray().then(doc => res.json({ doc }));        
+    });
+});
+
 r.get('/userEvents/:email', (req, res) => {
     const { MongoClient } = require('mongodb');
     const uri = "mongodb+srv://whiterose:avengers21@cluster0.uimrt.mongodb.net/test?retryWrites=true&w=majority";
@@ -203,6 +214,25 @@ r.post('/addEvent', async (req, res) => {
             location: req.body.location
         };
         client.db("test").collection("itinerary").insertOne(event, function (err, res) {
+            if (err) throw err;
+            client.close();            
+        });
+        res.json({"happy": "test"});
+    });
+});
+
+r.post('/addEvent', async (req, res) => {
+    const { MongoClient } = require('mongodb');
+    const uri = "mongodb+srv://whiterose:avengers21@cluster0.uimrt.mongodb.net/test?retryWrites=true&w=majority";
+    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    client.connect(err => {
+        console.log("error: " + err);
+        var event = { 
+            email: req.body.email,
+            venmo: "",
+            cashApp: ""
+        };
+        client.db("test").collection("events").insertOne(event, function (err, res) {
             if (err) throw err;
             client.close();            
         });
