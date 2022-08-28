@@ -221,7 +221,7 @@ r.post('/addEvent', async (req, res) => {
     });
 });
 
-r.post('/addEvent', async (req, res) => {
+r.post('/addOrder', async (req, res) => {
     const { MongoClient } = require('mongodb');
     const uri = "mongodb+srv://whiterose:avengers21@cluster0.uimrt.mongodb.net/test?retryWrites=true&w=majority";
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -229,10 +229,11 @@ r.post('/addEvent', async (req, res) => {
         console.log("error: " + err);
         var event = { 
             email: req.body.email,
-            venmo: "",
-            cashApp: ""
+            venmo: req.body.venmo,
+            amount: req.body.amount,
+            orderId: req.body.orderId
         };
-        client.db("test").collection("events").insertOne(event, function (err, res) {
+        client.db("test").collection("orders").insertOne(event, function (err, res) {
             if (err) throw err;
             client.close();            
         });
