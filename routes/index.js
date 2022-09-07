@@ -241,4 +241,15 @@ r.post('/addOrder', async (req, res) => {
     });
 });
 
+r.get('/orders/:email', (req, res) => {
+    const { MongoClient } = require('mongodb');
+    const uri = "mongodb+srv://whiterose:avengers21@cluster0.uimrt.mongodb.net/test?retryWrites=true&w=majority";
+    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    client.connect(err => {
+        console.log("error: " + err);
+        var email = '' + req.params.email
+        client.db("test").collection("orders").find({ email: email }).toArray().then(doc => res.json({ doc }));
+    });
+});
+
 module.exports = r;
