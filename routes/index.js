@@ -232,7 +232,7 @@ r.post('/addOrder', async (req, res) => {
             venmo: req.body.venmo,
             amount: req.body.amount,
             orderId: req.body.orderId,
-            stauts: 'unfullfilled'
+            status: 'unfullfilled'
         };
         client.db("test").collection("orders").insertOne(event, function (err, res) {
             if (err) throw err;
