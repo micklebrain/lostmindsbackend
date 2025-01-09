@@ -31,12 +31,11 @@ r.get('/demo', (req, res) => {
     //     });
     // });
 
-    const { MongoClient, ServerApiVersion } = require('mongodb');
+    const { MongoClient } = require('mongodb');
     const uri = "mongodb+srv://whiterose:avengers21@micklebrain.uimrt.mongodb.net/?retryWrites=true&w=majority&appName=micklebrain";
 
     const client = new MongoClient(uri, {
         serverApi: {
-          version: '1,0',
           strict: true,
           deprecationErrors: true,
         }
