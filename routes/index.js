@@ -19,7 +19,7 @@ r.get('/', (req, res) => {
 // r.use('/demo', demo);
 r.get('/demo', (req, res) => {
     const { MongoClient } = require('mongodb');
-    const uri = "mongodb+srv://whiterose:avengers21@cluster0.uimrt.mongodb.net/test?retryWrites=true&w=majority";
+    const uri = "mongodb+srv://whiterose:avengers21@micklebrain.uimrt.mongodb.net/?retryWrites=true&w=majority&appName=micklebrain";
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     client.connect(err => {
         console.log("error: " + err);
