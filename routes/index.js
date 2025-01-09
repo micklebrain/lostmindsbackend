@@ -18,9 +18,21 @@ r.get('/', (req, res) => {
 
 // r.use('/demo', demo);
 r.get('/demo', (req, res) => {
-    const { MongoClient } = require('mongodb');
+    // const { MongoClient } = require('mongodb');
+    // const uri = "mongodb+srv://whiterose:avengers21@micklebrain.uimrt.mongodb.net/?retryWrites=true&w=majority&appName=micklebrain";
+    // const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
+    const { MongoClient, ServerApiVersion } = require('mongodb');
     const uri = "mongodb+srv://whiterose:avengers21@micklebrain.uimrt.mongodb.net/?retryWrites=true&w=majority&appName=micklebrain";
-    const client = new MongoClient(uri, { useNewUrlParser: true});
+    // Create a MongoClient with a MongoClientOptions object to set the Stable API version
+    const client = new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
+    });
+
     client.connect(err => {
         console.log("error: " + err);
         var resturant = { name: "Obao" };
@@ -183,9 +195,9 @@ r.get('/users/:email', (req, res) => {
     const uri = "mongodb+srv://whiterose:avengers21@cluster0.uimrt.mongodb.net/test?retryWrites=true&w=majority";
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     client.connect(err => {
-        console.log("error: " + err);    
+        console.log("error: " + err);
         var email = '' + req.params.email
-        client.db("test").collection("users").find({ email: "micklebrain@gmail.com" }).toArray().then(doc => res.json({ doc }));        
+        client.db("test").collection("users").find({ email: "micklebrain@gmail.com" }).toArray().then(doc => res.json({ doc }));
     });
 });
 
@@ -194,7 +206,7 @@ r.get('/userEvents/:email', (req, res) => {
     const uri = "mongodb+srv://whiterose:avengers21@cluster0.uimrt.mongodb.net/test?retryWrites=true&w=majority";
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     client.connect(err => {
-        console.log("error: " + err);    
+        console.log("error: " + err);
         var email = '' + req.params.email
         client.db("test").collection("itinerary").find({ email: "nathanthainguyen@gmail.com" }).toArray().then(doc => res.json({ doc }));
         // client.db("test").collection("itinerary").find().toArray().then(doc => res.json({ doc }));
@@ -207,7 +219,7 @@ r.post('/addEvent', async (req, res) => {
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     client.connect(err => {
         console.log("error: " + err);
-        var event = { 
+        var event = {
             email: req.body.email,
             name: req.body.name,
             date: new Date(req.body.date),
@@ -215,9 +227,9 @@ r.post('/addEvent', async (req, res) => {
         };
         client.db("test").collection("itinerary").insertOne(event, function (err, res) {
             if (err) throw err;
-            client.close();            
+            client.close();
         });
-        res.json({"happy": "test"});
+        res.json({ "happy": "test" });
     });
 });
 
@@ -227,7 +239,7 @@ r.post('/addOrder', async (req, res) => {
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     client.connect(err => {
         console.log("error: " + err);
-        var event = { 
+        var event = {
             email: req.body.email,
             venmo: req.body.venmo,
             amount: req.body.amount,
@@ -236,9 +248,9 @@ r.post('/addOrder', async (req, res) => {
         };
         client.db("test").collection("orders").insertOne(event, function (err, res) {
             if (err) throw err;
-            client.close();            
+            client.close();
         });
-        res.json({"happy": "test"});
+        res.json({ "happy": "test" });
     });
 });
 
