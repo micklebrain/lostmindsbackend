@@ -7,13 +7,12 @@
     "start": "vercel dev",
     "test": "jest -i"
   },
-  "dependencies": {
-    "bson": "^6.10.1",
+  "dependencies": {    
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.1",
     "helmet": "^4.6.0",
-    "mongodb": "^6.12",
+    "mongodb": "^6.7",
     "nodemailer": "^6.7.5",
     "stripe": "^8.219.0",
     "vercel": "^23.0.1"
