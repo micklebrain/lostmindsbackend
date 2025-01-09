@@ -36,7 +36,7 @@ r.get('/demo', (req, res) => {
 
     const client = new MongoClient(uri, {
         serverApi: {
-          version: ServerApiVersion.v1,
+          version: '1,0',
           strict: true,
           deprecationErrors: true,
         }
