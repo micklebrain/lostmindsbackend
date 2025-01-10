@@ -71,7 +71,7 @@ r.post('/completeTask/:taskName', (req, res) => {
   the filter */
             const options = { upsert: true };
             console.log('task name ' + req.params.taskName);
-            response = await client.db("todo").collection("todo").updateOne({ task: req.params.taskName }, updateDoc, options).toArray().then(doc => res.json({ doc }));
+            response = await client.db("todo").collection("todo").updateOne({ task: req.params.taskName }, updateDoc, options);
             console.log(response)
         }
         finally {
