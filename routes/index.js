@@ -70,7 +70,6 @@ r.get('/restartTasks', (req, res) => {
             /* Set the upsert option to insert a document if no documents match
   the filter */
             const options = { upsert: true };
-            console.log('task name ' + req.params.taskName);
             response = await client.db("todo").collection("todo").updateMany({ isCompleted: true }, updateDoc, options);
             console.log(response)
         }
