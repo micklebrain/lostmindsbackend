@@ -46,7 +46,7 @@ r.get('/demo', (req, res) => {
     run().catch(error => console.log)
 });
 
-r.post('/completeTask', (req, res) => {
+r.post('/completeTask:taskName', (req, res) => {
     const { MongoClient, ServerApiVersion } = require('mongodb');
     const uri = "mongodb+srv://betarose:avengers21@micklebrain.uimrt.mongodb.net/";
     const client = new MongoClient(uri, {
