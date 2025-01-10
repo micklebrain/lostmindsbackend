@@ -18,23 +18,8 @@ r.get('/', (req, res) => {
 
 // r.use('/demo', demo);
 r.get('/demo', (req, res) => {
-
-    // const mongoose = require('mongoose');
-
-    // mongoose.connect('mongodb+srv://whiterose:avengers21@micklebrain.uimrt.mongodb.net/?retryWrites=true&w=majority&appName=micklebrain');
-    // const database = mongoose.connection
-
-    // database.on('error', (error) => {
-    //     console.log(error)
-    // })
-
-    // database.once('connected', () => {
-    //     console.log('Database Connected');
-    // })
-
     const { MongoClient, ServerApiVersion } = require('mongodb');
     const uri = "mongodb+srv://betarose:avengers21@micklebrain.uimrt.mongodb.net/";
-    // Create a MongoClient with a MongoClientOptions object to set the Stable API version
     const client = new MongoClient(uri, {
         serverApi: {
             version: ServerApiVersion.v1,
@@ -49,10 +34,6 @@ r.get('/demo', (req, res) => {
         try {
             await client.connect();
 
-            await client.db("todo").command({ ping: 1 });
-            console.log(
-                "Pinged your deployment. You successfully connected to MongoDB!"
-            );
             response = await client.db("todo").collection("todo").find({}).toArray().then(doc => res.json({ doc }));
             console.log(response)
         }
@@ -63,20 +44,41 @@ r.get('/demo', (req, res) => {
     }
 
     run().catch(error => console.log)
+});
 
+r.post('/completeTask', (req, res) => {
+    const { MongoClient, ServerApiVersion } = require('mongodb');
+    const uri = "mongodb+srv://betarose:avengers21@micklebrain.uimrt.mongodb.net/";
+    const client = new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
+    });
 
-    // const { MongoClient } = require('mongodb');
-    // const uri = "mongodb+srv://whiterose:avengers21@micklebrain.uimrt.mongodb.net/?retryWrites=true&w=majority&appName=micklebrain";
-    // const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    var response;
 
-    // client.connect(err => {
-    //     console.log("error: " + err);
-    //     var resturant = { name: "Obao" };
-    //     client.db("test").collection("resturants").insertOne(resturant, function (err, res) {
-    //         if (err) throw err;
-    //         client.close();
-    //     });
-    // });
+    const run = async () => {
+        try {
+            await client.connect();
+
+            const updateDoc = {
+                $set: {
+                  isCompleted: true
+                },
+              };
+
+            response = await client.db("todo").collection("todo").updateOne({ title: req.params.taskName }, updateDoc).toArray().then(doc => res.json({ doc }));
+            console.log(response)
+        }
+        finally {                    
+            await client.close();
+            return response;
+        }
+    }
+
+    run().catch(error => console.log)
 });
 
 r.get('/resturants/:city', (req, res) => {
