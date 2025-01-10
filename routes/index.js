@@ -51,11 +51,11 @@ r.get('/demo', (req, res) => {
             console.log(
                 "Pinged your deployment. You successfully connected to MongoDB!"
             );
-        }
-        finally {
             client.db("todo").collection("todo").find({ task: pushups }).toArray().then(doc => res.json({ doc }));
-            // res.json(new SuccessResponseObject('here some goodies'));
         }
+        // finally {            
+           // res.json(new SuccessResponseObject('here some goodies'));
+        // }
     }
 
     run().catch(error => console.log)
