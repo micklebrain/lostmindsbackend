@@ -21,17 +21,6 @@ r.get('/demo', (req, res) => {
 
     const mongoose = require('mongoose');
 
-    // const { MongoClient, ServerApiVersion } = require('mongodb');
-    // const uri = "mongodb+srv://whiterose:avengers21@micklebrain.uimrt.mongodb.net/?retryWrites=true&w=majority&appName=micklebrain";
-    // // Create a MongoClient with a MongoClientOptions object to set the Stable API version
-    // const client = new MongoClient(uri, {
-    //     serverApi: {
-    //         version: ServerApiVersion.v1,
-    //         strict: true,
-    //         deprecationErrors: true,
-    //     }
-    // });
-
     mongoose.connect('mongodb+srv://whiterose:avengers21@cluster0.uimrt.mongodb.net/test?retryWrites=true&w=majority');
     const database = mongoose.connection
 
@@ -42,6 +31,17 @@ r.get('/demo', (req, res) => {
     database.once('connected', () => {
         console.log('Database Connected');
     })
+
+    // const { MongoClient, ServerApiVersion } = require('mongodb');
+    // const uri = "mongodb+srv://whiterose:avengers21@micklebrain.uimrt.mongodb.net/?retryWrites=true&w=majority&appName=micklebrain";
+    // // Create a MongoClient with a MongoClientOptions object to set the Stable API version
+    // const client = new MongoClient(uri, {
+    //     serverApi: {
+    //         version: ServerApiVersion.v1,
+    //         strict: true,
+    //         deprecationErrors: true,
+    //     }
+    // });
 
     // try {
     //     // Connect the client to the server	(optional starting in v4.7)
