@@ -27,7 +27,7 @@ r.get('/demo', (req, res) => {
     // database.on('error', (error) => {
     //     console.log(error)
     // })
-    
+
     // database.once('connected', () => {
     //     console.log('Database Connected');
     // })
@@ -43,17 +43,22 @@ r.get('/demo', (req, res) => {
         }
     });
 
-    try {
-        // Connect the client to the server	(optional starting in v4.7)
-        console.log('connecting client to server');
-        client.connect();
-        // Send a ping to confirm a successful connection
-        // client.db("todo").command({ ping: 1 });
-        // console.log("Pinged your deployment. You successfully connected to MongoDB!");
-    } finally {
-        // Ensures that the client will close when you finish/error
-        client.close();
+    const run = async () => {
+        try {
+            await client.connect();
+
+            await client.db("todo").command({ ping: 1 });
+            console.log(
+                "Pinged your deployment. You successfully connected to MongoDB!"
+            );
+        }
+        finally {
+
+        }
     }
+
+    run().catch(error => console.log)
+
 
     // const { MongoClient } = require('mongodb');
     // const uri = "mongodb+srv://whiterose:avengers21@micklebrain.uimrt.mongodb.net/?retryWrites=true&w=majority&appName=micklebrain";
