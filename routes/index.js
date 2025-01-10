@@ -56,8 +56,8 @@ r.get('/demo', (req, res) => {
             response = await client.db("todo").collection("todo").find({}).toArray().then(doc => res.json({ doc }));
             console.log(response)
         }
-        finally {            
-        //    res.json(new SuccessResponseObject('here some goodies'));
+        finally {                    
+            await client.close();
             return response;
         }
     }
