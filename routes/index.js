@@ -19,7 +19,7 @@ r.get('/', (req, res) => {
 // r.use('/demo', demo);
 r.get('/demo', (req, res) => {
 
-    // const mongoose = require('mongoose');
+    const mongoose = require('mongoose');
 
     mongoose.connect('mongodb+srv://whiterose:avengers21@micklebrain.uimrt.mongodb.net/test?retryWrites=true&w=majority');
     const database = mongoose.connection
