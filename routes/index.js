@@ -70,6 +70,7 @@ r.post('/completeTask', (req, res) => {
             /* Set the upsert option to insert a document if no documents match
   the filter */
             const options = { upsert: true };
+            console.log('task name ' + req.params.taskName);
             response = await client.db("todo").collection("todo").updateOne({ task: req.params.taskName }, updateDoc, options).toArray().then(doc => res.json({ doc }));
             console.log(response)
         }
