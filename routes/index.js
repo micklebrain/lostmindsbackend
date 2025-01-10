@@ -53,7 +53,7 @@ r.get('/demo', (req, res) => {
             );
         }
         finally {
-
+            res.json(new SuccessResponseObject('here some goodies'));
         }
     }
 
