@@ -45,7 +45,7 @@ r.get('/demo', (req, res) => {
 
     try {
         // Connect the client to the server	(optional starting in v4.7)
-        console.log('connecting client to server')
+        console.log('connecting client to server');
         client.connect();
         // Send a ping to confirm a successful connection
         // client.db("todo").command({ ping: 1 });
@@ -71,7 +71,7 @@ r.get('/demo', (req, res) => {
 
 r.get('/resturants/:city', (req, res) => {
     const { MongoClient } = require('mongodb');
-    const uri = "mongodb+srv://whiterose:avengers21@cluster0.uimrt.mongodb.net/test?retryWrites=true&w=majority";
+    const uri = "mongodb+srv://whiterose:avengers21@micklebrain.uimrt.mongodb.net";
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     client.connect(err => {
         console.log("error: " + err);
