@@ -32,40 +32,40 @@ r.get('/demo', (req, res) => {
     //     console.log('Database Connected');
     // })
 
-    // const { MongoClient, ServerApiVersion } = require('mongodb');
-    // const uri = "mongodb+srv://whiterose:avengers21@micklebrain.uimrt.mongodb.net/?retryWrites=true&w=majority&appName=micklebrain";
-    // // Create a MongoClient with a MongoClientOptions object to set the Stable API version
-    // const client = new MongoClient(uri, {
-    //     serverApi: {
-    //         version: ServerApiVersion.v1,
-    //         strict: true,
-    //         deprecationErrors: true,
-    //     }
-    // });
-
-    // try {
-    //     // Connect the client to the server	(optional starting in v4.7)
-    //     client.connect();
-    //     // Send a ping to confirm a successful connection
-    //     client.db("micklebrain").command({ ping: 1 });
-    //     console.log("Pinged your deployment. You successfully connected to MongoDB!");
-    // } finally {
-    //     // Ensures that the client will close when you finish/error
-    //     client.close();
-    // }
-
-    const { MongoClient } = require('mongodb');
+    const { MongoClient, ServerApiVersion } = require('mongodb');
     const uri = "mongodb+srv://whiterose:avengers21@micklebrain.uimrt.mongodb.net/?retryWrites=true&w=majority&appName=micklebrain";
-    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-
-    client.connect(err => {
-        console.log("error: " + err);
-        var resturant = { name: "Obao" };
-        client.db("test").collection("resturants").insertOne(resturant, function (err, res) {
-            if (err) throw err;
-            client.close();
-        });
+    // Create a MongoClient with a MongoClientOptions object to set the Stable API version
+    const client = new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
     });
+
+    try {
+        // Connect the client to the server	(optional starting in v4.7)
+        client.connect();
+        // Send a ping to confirm a successful connection
+        client.db("todo").command({ ping: 1 });
+        console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    } finally {
+        // Ensures that the client will close when you finish/error
+        client.close();
+    }
+
+    // const { MongoClient } = require('mongodb');
+    // const uri = "mongodb+srv://whiterose:avengers21@micklebrain.uimrt.mongodb.net/?retryWrites=true&w=majority&appName=micklebrain";
+    // const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
+    // client.connect(err => {
+    //     console.log("error: " + err);
+    //     var resturant = { name: "Obao" };
+    //     client.db("test").collection("resturants").insertOne(resturant, function (err, res) {
+    //         if (err) throw err;
+    //         client.close();
+    //     });
+    // });
 });
 
 r.get('/resturants/:city', (req, res) => {
