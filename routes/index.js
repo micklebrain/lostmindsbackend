@@ -19,6 +19,8 @@ r.get('/', (req, res) => {
 // r.use('/demo', demo);
 r.get('/demo', (req, res) => {
 
+    const mongoose = require('mongoose');
+
     // const { MongoClient, ServerApiVersion } = require('mongodb');
     // const uri = "mongodb+srv://whiterose:avengers21@micklebrain.uimrt.mongodb.net/?retryWrites=true&w=majority&appName=micklebrain";
     // // Create a MongoClient with a MongoClientOptions object to set the Stable API version
