@@ -47,7 +47,7 @@ r.get('/demo', (req, res) => {
         // Connect the client to the server	(optional starting in v4.7)
         client.connect();
         // Send a ping to confirm a successful connection
-        client.db("admin").command({ ping: 1 });
+        client.db("micklebrain").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
         // Ensures that the client will close when you finish/error
