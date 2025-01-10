@@ -19,18 +19,18 @@ r.get('/', (req, res) => {
 // r.use('/demo', demo);
 r.get('/demo', (req, res) => {
 
-    const mongoose = require('mongoose');
+    // const mongoose = require('mongoose');
 
-    mongoose.connect('mongodb+srv://whiterose:avengers21@micklebrain.uimrt.mongodb.net/?retryWrites=true&w=majority&appName=micklebrain');
-    const database = mongoose.connection
+    // mongoose.connect('mongodb+srv://whiterose:avengers21@micklebrain.uimrt.mongodb.net/?retryWrites=true&w=majority&appName=micklebrain');
+    // const database = mongoose.connection
 
-    database.on('error', (error) => {
-        console.log(error)
-    })
+    // database.on('error', (error) => {
+    //     console.log(error)
+    // })
     
-    database.once('connected', () => {
-        console.log('Database Connected');
-    })
+    // database.once('connected', () => {
+    //     console.log('Database Connected');
+    // })
 
     // const { MongoClient, ServerApiVersion } = require('mongodb');
     // const uri = "mongodb+srv://whiterose:avengers21@micklebrain.uimrt.mongodb.net/?retryWrites=true&w=majority&appName=micklebrain";
@@ -54,18 +54,18 @@ r.get('/demo', (req, res) => {
     //     client.close();
     // }
 
-    // const { MongoClient } = require('mongodb');
-    // const uri = "mongodb+srv://whiterose:avengers21@micklebrain.uimrt.mongodb.net/?retryWrites=true&w=majority&appName=micklebrain";
-    // const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    const { MongoClient } = require('mongodb');
+    const uri = "mongodb+srv://whiterose:avengers21@micklebrain.uimrt.mongodb.net/?retryWrites=true&w=majority&appName=micklebrain";
+    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-    // client.connect(err => {
-    //     console.log("error: " + err);
-    //     var resturant = { name: "Obao" };
-    //     client.db("test").collection("resturants").insertOne(resturant, function (err, res) {
-    //         if (err) throw err;
-    //         client.close();
-    //     });
-    // });
+    client.connect(err => {
+        console.log("error: " + err);
+        var resturant = { name: "Obao" };
+        client.db("test").collection("resturants").insertOne(resturant, function (err, res) {
+            if (err) throw err;
+            client.close();
+        });
+    });
 });
 
 r.get('/resturants/:city', (req, res) => {
