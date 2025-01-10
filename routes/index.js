@@ -21,7 +21,7 @@ r.get('/demo', (req, res) => {
 
     const mongoose = require('mongoose');
 
-    mongoose.connect('mongodb+srv://whiterose:avengers21@micklebrain.uimrt.mongodb.net/test?retryWrites=true&w=majority');
+    mongoose.connect('mongodb+srv://whiterose:avengers21@micklebrain.uimrt.mongodb.net/?retryWrites=true&w=majority&appName=micklebrain');
     const database = mongoose.connection
 
     database.on('error', (error) => {
