@@ -63,14 +63,14 @@ r.get('/restartTasks', (req, res) => {
         try {
             await client.connect();
             const updateDoc = {
-                $set: {
+                $set: {                    
                     isCompleted: false
                 },
             };
             /* Set the upsert option to insert a document if no documents match
   the filter */
             const options = { upsert: true };
-            response = await client.db("todo").collection("todo").updateMany({ isCompleted: true }, updateDoc, options);
+            response = await client.db("todo").collection("todo").updateMany({ isCompleted: true, isDaily: true }, updateDoc, options);
             console.log(response)
         }
         finally {
@@ -102,12 +102,9 @@ r.post('/completeTask/:taskName', (req, res) => {
                 $set: {
                     isCompleted: true
                 },
-            };
-            /* Set the upsert option to insert a document if no documents match
-  the filter */
-            const options = { upsert: true };
+            };            
             console.log('task name ' + req.params.taskName);
-            response = await client.db("todo").collection("todo").updateOne({ task: req.params.taskName }, updateDoc, options);
+            response = await client.db("todo").collection("todo").updateOne({ task: req.params.taskName }, updateDoc);
             console.log(response)
         }
         finally {
