@@ -45,6 +45,7 @@ r.get('/demo', (req, res) => {
 
     try {
         // Connect the client to the server	(optional starting in v4.7)
+        console.log('connecting client to server')
         client.connect();
         // Send a ping to confirm a successful connection
         // client.db("todo").command({ ping: 1 });
