@@ -37,7 +37,7 @@ r.get('/demo', (req, res) => {
             response = await client.db("todo").collection("todo").find({}).toArray().then(doc => res.json({ doc }));
             console.log(response)
         }
-        finally {                    
+        finally {
             await client.close();
             return response;
         }
@@ -62,17 +62,18 @@ r.post('/completeTask', (req, res) => {
     const run = async () => {
         try {
             await client.connect();
-
             const updateDoc = {
                 $set: {
-                  isCompleted: true
+                    isCompleted: true
                 },
-              };
-
-            response = await client.db("todo").collection("todo").updateOne({ title: req.params.taskName }, updateDoc).toArray().then(doc => res.json({ doc }));
+            };
+            /* Set the upsert option to insert a document if no documents match
+  the filter */
+            const options = { upsert: true };
+            response = await client.db("todo").collection("todo").updateOne({ task: req.params.taskName }, updateDoc, options).toArray().then(doc => res.json({ doc }));
             console.log(response)
         }
-        finally {                    
+        finally {
             await client.close();
             return response;
         }
