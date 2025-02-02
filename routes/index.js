@@ -138,7 +138,7 @@ r.post('/restartStreak/:name', (req, res) => {
                 },
             };            
             console.log('task name ' + req.params.taskName);
-            response = await client.db("todo").collection("sugar").updateOne({ name: req.params.name }, updateDoc);
+            response = await client.db("todo").collection("streaks").updateOne({ name: req.params.name }, updateDoc);
             console.log(response)
         }
         finally {
