@@ -116,6 +116,40 @@ r.post('/completeTask/:taskName', (req, res) => {
     run().catch(error => console.log)
 });
 
+r.post('/restartStreak/:name', (req, res) => {
+    const { MongoClient, ServerApiVersion } = require('mongodb');
+    const uri = "mongodb+srv://betarose:avengers21@micklebrain.uimrt.mongodb.net/";
+    const client = new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
+    });
+
+    var response;
+
+    const run = async () => {
+        try {
+            await client.connect();
+            const updateDoc = {
+                $set: {
+                    lastFailed: new Date()
+                },
+            };            
+            console.log('task name ' + req.params.taskName);
+            response = await client.db("todo").collection("sugar").updateOne({ name: req.params.name }, updateDoc);
+            console.log(response)
+        }
+        finally {
+            await client.close();
+            return response;
+        }
+    }
+
+    run().catch(error => console.log)
+});
+
 r.get('/resturants/:city', (req, res) => {
     const { MongoClient } = require('mongodb');
     const uri = "mongodb+srv://whiterose:avengers21@micklebrain.uimrt.mongodb.net";
