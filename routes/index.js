@@ -197,7 +197,7 @@ r.post('/refillHearts/:name/:heartNumber', (req, res) => {
             await client.connect();
             const updateDoc = {
                 $set: {                    
-                    hearts: req.params.name
+                    hearts: req.params.heartNumber
                 },
             };
             /* Set the upsert option to insert a document if no documents match
