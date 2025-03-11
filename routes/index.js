@@ -179,6 +179,44 @@ r.post('/restartStreak/:name', (req, res) => {
     run().catch(error => console.log)
 });
 
+r.post('/refillHearts/:name/:heartNumber', (req, res) => {
+    const { MongoClient, ServerApiVersion } = require('mongodb');
+    const uri = "mongodb+srv://betarose:avengers21@micklebrain.uimrt.mongodb.net/";
+    const client = new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
+    });
+
+    var response;
+
+    const run = async () => {
+        try {
+            await client.connect();
+            const updateDoc = {
+                $set: {                    
+                    hearts: req.params.name
+                },
+            };
+            /* Set the upsert option to insert a document if no documents match
+  the filter */
+            const options = { upsert: true };
+            response = await client.db("todo").collection("streaks").updateOne({ name: req.params.name }, updateDoc, options);
+            console.log(response)
+        }
+        finally {
+            await client.close();
+            return response;
+        }
+    }
+
+    run().catch(error => console.log)
+});
+
+// seperate routes for old API
+
 r.get('/resturants/:city', (req, res) => {
     const { MongoClient } = require('mongodb');
     const uri = "mongodb+srv://whiterose:avengers21@micklebrain.uimrt.mongodb.net";
