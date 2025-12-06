@@ -46,6 +46,35 @@ r.get('/demo', (req, res) => {
     run().catch(error => console.log)
 });
 
+r.get('/todos', (req, res) => {
+    const { MongoClient, ServerApiVersion } = require('mongodb');
+    const uri = "mongodb+srv://betarose:avengers21@micklebrain.uimrt.mongodb.net/";
+    const client = new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
+    });
+
+    var response;
+
+    const run = async () => {
+        try {
+            await client.connect();
+
+            response = await client.db("personal").collection("todos").find({}).toArray().then(doc => res.json({ doc }));
+            console.log(response)
+        }
+        finally {
+            await client.close();
+            return response;
+        }
+    }
+
+    run().catch(error => console.log)
+});
+
 r.get('/streaks', (req, res) => {
     const { MongoClient, ServerApiVersion } = require('mongodb');
     const uri = "mongodb+srv://betarose:avengers21@micklebrain.uimrt.mongodb.net/";
