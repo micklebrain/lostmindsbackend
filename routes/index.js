@@ -75,6 +75,42 @@ r.get('/todos', (req, res) => {
     run().catch(error => console.log)
 });
 
+r.post('/todos/reset', (req, res) => {
+    const { MongoClient, ServerApiVersion } = require('mongodb');
+    const uri = "mongodb+srv://betarose:avengers21@micklebrain.uimrt.mongodb.net/";
+    const client = new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
+    });
+
+    const run = async () => {
+        try {
+            await client.connect();
+
+            const updateDoc = {
+                $set: { isCompleted: false },
+            };
+
+            const result = await client
+                .db("personal")
+                .collection("todos")
+                .updateMany({}, updateDoc);
+
+            res.json({ updatedCount: result.modifiedCount });
+        } finally {
+            await client.close();
+        }
+    };
+
+    run().catch((error) => {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to reset todos' });
+    });
+});
+
 r.post('/todos/:id/complete', (req, res) => {
     const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
     const uri = "mongodb+srv://betarose:avengers21@micklebrain.uimrt.mongodb.net/";
