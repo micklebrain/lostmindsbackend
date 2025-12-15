@@ -156,6 +156,87 @@ r.post('/hourOrder', (req, res) => {
     });
 });
 
+r.get('/hourTasks', (req, res) => {
+    const { MongoClient, ServerApiVersion } = require('mongodb');
+    const uri = "mongodb+srv://betarose:avengers21@micklebrain.uimrt.mongodb.net/";
+    const client = new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
+    });
+
+    const run = async () => {
+        try {
+            await client.connect();
+
+            const doc = await client
+                .db("personal")
+                .collection("timehack")
+                .findOne({ _id: "hourTasks" });
+
+            res.json({ tasks: doc && doc.tasks ? doc.tasks : {} });
+        } finally {
+            await client.close();
+        }
+    };
+
+    run().catch((error) => {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to load hour tasks' });
+    });
+});
+
+r.post('/hourTasks/:hour', (req, res) => {
+    const { MongoClient, ServerApiVersion } = require('mongodb');
+    const uri = "mongodb+srv://betarose:avengers21@micklebrain.uimrt.mongodb.net/";
+    const client = new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
+    });
+
+    const run = async () => {
+        try {
+            await client.connect();
+
+            const hour = Number(req.params.hour);
+            if (!Number.isInteger(hour) || hour < 0 || hour > 23) {
+                res.status(400).json({ error: 'Invalid hour' });
+                return;
+            }
+
+            const text =
+                req.body && typeof req.body.text === 'string'
+                    ? req.body.text
+                    : '';
+
+            const update = {
+                $set: {
+                    [`tasks.${hour}`]: text,
+                },
+            };
+
+            const result = await client
+                .db("personal")
+                .collection("timehack")
+                .updateOne({ _id: "hourTasks" }, update, { upsert: true });
+
+            res.json({ updated: result.modifiedCount || result.upsertedCount });
+        } finally {
+            await client.close();
+        }
+    };
+
+    run().catch((error) => {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to save hour task' });
+    });
+});
+
 r.post('/todos/reset', (req, res) => {
     const { MongoClient, ServerApiVersion } = require('mongodb');
     const uri = "mongodb+srv://betarose:avengers21@micklebrain.uimrt.mongodb.net/";
