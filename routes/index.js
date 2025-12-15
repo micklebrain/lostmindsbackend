@@ -75,6 +75,87 @@ r.get('/todos', (req, res) => {
     run().catch(error => console.log)
 });
 
+r.get('/hourOrder', (req, res) => {
+    const { MongoClient, ServerApiVersion } = require('mongodb');
+    const uri = "mongodb+srv://betarose:avengers21@micklebrain.uimrt.mongodb.net/";
+    const client = new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
+    });
+
+    const run = async () => {
+        try {
+            await client.connect();
+
+            const doc = await client
+                .db("personal")
+                .collection("timehack")
+                .findOne({ _id: "hourOrder" });
+
+            res.json({ order: doc && Array.isArray(doc.order) ? doc.order : null });
+        } finally {
+            await client.close();
+        }
+    };
+
+    run().catch((error) => {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to load hour order' });
+    });
+});
+
+r.post('/hourOrder', (req, res) => {
+    const { MongoClient, ServerApiVersion } = require('mongodb');
+    const uri = "mongodb+srv://betarose:avengers21@micklebrain.uimrt.mongodb.net/";
+    const client = new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
+    });
+
+    const run = async () => {
+        try {
+            await client.connect();
+
+            const order = Array.isArray(req.body && req.body.order)
+                ? req.body.order
+                : null;
+
+            if (
+                !order ||
+                order.length !== 24 ||
+                !order.every((h) => Number.isInteger(h) && h >= 0 && h < 24)
+            ) {
+                res.status(400).json({ error: 'Invalid hour order' });
+                return;
+            }
+
+            const result = await client
+                .db("personal")
+                .collection("timehack")
+                .updateOne(
+                    { _id: "hourOrder" },
+                    { $set: { order } },
+                    { upsert: true }
+                );
+
+            res.json({ updated: result.modifiedCount || result.upsertedCount });
+        } finally {
+            await client.close();
+        }
+    };
+
+    run().catch((error) => {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to save hour order' });
+    });
+});
+
 r.post('/todos/reset', (req, res) => {
     const { MongoClient, ServerApiVersion } = require('mongodb');
     const uri = "mongodb+srv://betarose:avengers21@micklebrain.uimrt.mongodb.net/";
