@@ -312,9 +312,54 @@ r.post('/todos/:id/complete', (req, res) => {
         }
     };
 
+	    run().catch((error) => {
+	        console.error(error);
+	        res.status(500).json({ error: 'Failed to complete todo' });
+	    });
+	});
+
+r.post('/todos/:id/incomplete', (req, res) => {
+    const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+    const uri = "mongodb+srv://betarose:avengers21@micklebrain.uimrt.mongodb.net/";
+    const client = new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
+    });
+
+    const run = async () => {
+        try {
+            await client.connect();
+
+            const id = req.params.id;
+            let filter;
+            try {
+                filter = { _id: new ObjectId(id) };
+            } catch (e) {
+                res.status(400).json({ error: 'Invalid todo id' });
+                return;
+            }
+
+            const updateDoc = {
+                $set: { isCompleted: false },
+            };
+
+            const result = await client
+                .db("personal")
+                .collection("todos")
+                .updateOne(filter, updateDoc);
+
+            res.json({ updatedCount: result.modifiedCount });
+        } finally {
+            await client.close();
+        }
+    };
+
     run().catch((error) => {
         console.error(error);
-        res.status(500).json({ error: 'Failed to complete todo' });
+        res.status(500).json({ error: 'Failed to uncomplete todo' });
     });
 });
 
