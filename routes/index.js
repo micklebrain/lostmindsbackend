@@ -63,7 +63,13 @@ r.get('/todos', (req, res) => {
         try {
             await client.connect();
 
-            response = await client.db("personal").collection("todos").find({}).toArray().then(doc => res.json({ doc }));
+            response = await client
+                .db("personal")
+                .collection("todos")
+                .find({})
+                .sort({ order: 1, _id: 1 })
+                .toArray()
+                .then(doc => res.json({ doc }));
             console.log(response)
         }
         finally {
@@ -317,6 +323,67 @@ r.post('/todos/:id/complete', (req, res) => {
 	        res.status(500).json({ error: 'Failed to complete todo' });
 	    });
 	});
+
+r.post('/todos/reorder', (req, res) => {
+    const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+    const uri = "mongodb+srv://betarose:avengers21@micklebrain.uimrt.mongodb.net/";
+    const client = new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
+    });
+
+    const run = async () => {
+        try {
+            await client.connect();
+
+            const ids = Array.isArray(req.body && req.body.ids)
+                ? req.body.ids
+                : null;
+
+            if (!ids || ids.length === 0) {
+                res.status(400).json({ error: 'Invalid ids array' });
+                return;
+            }
+
+            const operations = [];
+            ids.forEach((id, index) => {
+                try {
+                    const objectId = new ObjectId(String(id));
+                    operations.push({
+                        updateOne: {
+                            filter: { _id: objectId },
+                            update: { $set: { order: index } },
+                        },
+                    });
+                } catch (e) {
+                    // skip invalid ids
+                }
+            });
+
+            if (operations.length === 0) {
+                res.status(400).json({ error: 'No valid todo ids provided' });
+                return;
+            }
+
+            const result = await client
+                .db("personal")
+                .collection("todos")
+                .bulkWrite(operations);
+
+            res.json({ modifiedCount: result.modifiedCount });
+        } finally {
+            await client.close();
+        }
+    };
+
+    run().catch((error) => {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to reorder todos' });
+    });
+});
 
 r.post('/todos/:id/incomplete', (req, res) => {
     const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
