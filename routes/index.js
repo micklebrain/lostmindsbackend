@@ -648,6 +648,58 @@ r.post('/todos/:id/incomplete', (req, res) => {
     });
 });
 
+r.post('/todos/:id/tags', (req, res) => {
+    const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+    const uri = "mongodb+srv://betarose:avengers21@micklebrain.uimrt.mongodb.net/";
+    const client = new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
+    });
+
+    const run = async () => {
+        try {
+            await client.connect();
+
+            const id = req.params.id;
+            let filter;
+            try {
+                filter = { _id: new ObjectId(id) };
+            } catch (e) {
+                res.status(400).json({ error: 'Invalid todo id' });
+                return;
+            }
+
+            const rawTags = Array.isArray(req.body && req.body.tags)
+                ? req.body.tags
+                : [];
+            const tags = rawTags
+                .map((tag) => String(tag).trim().toLowerCase())
+                .filter((tag) => tag.length > 0);
+
+            const updateDoc = {
+                $set: { tags },
+            };
+
+            const result = await client
+                .db("personal")
+                .collection("todos")
+                .updateOne(filter, updateDoc);
+
+            res.json({ updatedCount: result.modifiedCount });
+        } finally {
+            await client.close();
+        }
+    };
+
+    run().catch((error) => {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to update todo tags' });
+    });
+});
+
 r.get('/streaks', (req, res) => {
     const { MongoClient, ServerApiVersion } = require('mongodb');
     const uri = "mongodb+srv://betarose:avengers21@micklebrain.uimrt.mongodb.net/";
