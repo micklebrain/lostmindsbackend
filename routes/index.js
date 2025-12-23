@@ -81,6 +81,81 @@ r.get('/todos', (req, res) => {
     run().catch(error => console.log)
 });
 
+r.post('/todos', (req, res) => {
+    const { MongoClient, ServerApiVersion } = require('mongodb');
+    const uri = "mongodb+srv://betarose:avengers21@micklebrain.uimrt.mongodb.net/";
+    const client = new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
+    });
+
+    const run = async () => {
+        try {
+            await client.connect();
+
+            const name =
+                req.body && typeof req.body.name === 'string'
+                    ? req.body.name.trim()
+                    : '';
+            if (!name) {
+                res.status(400).json({ error: 'Todo name is required' });
+                return;
+            }
+
+            const rawTags = Array.isArray(req.body && req.body.tags)
+                ? req.body.tags
+                : [];
+            const tags = rawTags
+                .map((tag) => String(tag).trim().toLowerCase())
+                .filter((tag) => tag.length > 0);
+
+            const lastTodo = await client
+                .db("personal")
+                .collection("todos")
+                .find({})
+                .sort({ order: -1, _id: -1 })
+                .limit(1)
+                .next();
+
+            const lastOrder =
+                lastTodo && Number.isInteger(lastTodo.order)
+                    ? lastTodo.order
+                    : -1;
+            const nextOrder = lastOrder + 1;
+
+            const insertDoc = {
+                name,
+                isCompleted: false,
+                tags,
+                order: nextOrder,
+            };
+
+            const result = await client
+                .db("personal")
+                .collection("todos")
+                .insertOne(insertDoc);
+
+            res.json({
+                id: result.insertedId.toString(),
+                todo: {
+                    ...insertDoc,
+                    _id: result.insertedId.toString(),
+                },
+            });
+        } finally {
+            await client.close();
+        }
+    };
+
+    run().catch((error) => {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to create todo' });
+    });
+});
+
 r.get('/hourOrder', (req, res) => {
     const { MongoClient, ServerApiVersion } = require('mongodb');
     const uri = "mongodb+srv://betarose:avengers21@micklebrain.uimrt.mongodb.net/";
