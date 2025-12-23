@@ -194,6 +194,38 @@ r.get('/hourTasks', (req, res) => {
     });
 });
 
+r.get('/hourTags', (req, res) => {
+    const { MongoClient, ServerApiVersion } = require('mongodb');
+    const uri = "mongodb+srv://betarose:avengers21@micklebrain.uimrt.mongodb.net/";
+    const client = new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
+    });
+
+    const run = async () => {
+        try {
+            await client.connect();
+
+            const doc = await client
+                .db("personal")
+                .collection("timehack")
+                .findOne({ _id: "hourTags" });
+
+            res.json({ tags: doc && doc.tags ? doc.tags : {} });
+        } finally {
+            await client.close();
+        }
+    };
+
+    run().catch((error) => {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to load hour tags' });
+    });
+});
+
 r.post('/hourTasks/:hour', (req, res) => {
     const { MongoClient, ServerApiVersion } = require('mongodb');
     const uri = "mongodb+srv://betarose:avengers21@micklebrain.uimrt.mongodb.net/";
@@ -240,6 +272,150 @@ r.post('/hourTasks/:hour', (req, res) => {
     run().catch((error) => {
         console.error(error);
         res.status(500).json({ error: 'Failed to save hour task' });
+    });
+});
+
+r.post('/hourTags/:hour', (req, res) => {
+    const { MongoClient, ServerApiVersion } = require('mongodb');
+    const uri = "mongodb+srv://betarose:avengers21@micklebrain.uimrt.mongodb.net/";
+    const client = new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
+    });
+
+    const run = async () => {
+        try {
+            await client.connect();
+
+            const hour = Number(req.params.hour);
+            if (!Number.isInteger(hour) || hour < 0 || hour > 23) {
+                res.status(400).json({ error: 'Invalid hour' });
+                return;
+            }
+
+            const rawTags = Array.isArray(req.body && req.body.tags)
+                ? req.body.tags
+                : [];
+            const tags = rawTags
+                .map((tag) => String(tag).trim().toLowerCase())
+                .filter((tag) => tag.length > 0);
+
+            const update = {
+                $set: {
+                    [`tags.${hour}`]: tags,
+                },
+            };
+
+            const result = await client
+                .db("personal")
+                .collection("timehack")
+                .updateOne({ _id: "hourTags" }, update, { upsert: true });
+
+            res.json({ updated: result.modifiedCount || result.upsertedCount });
+        } finally {
+            await client.close();
+        }
+    };
+
+    run().catch((error) => {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to save hour tags' });
+    });
+});
+
+r.get('/datedTasks', (req, res) => {
+    const { MongoClient, ServerApiVersion } = require('mongodb');
+    const uri = "mongodb+srv://betarose:avengers21@micklebrain.uimrt.mongodb.net/";
+    const client = new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
+    });
+
+    const run = async () => {
+        try {
+            await client.connect();
+
+            const doc = await client
+                .db("personal")
+                .collection("timehack")
+                .findOne({ _id: "datedTasks" });
+
+            res.json({ tasks: doc && doc.tasks ? doc.tasks : {} });
+        } finally {
+            await client.close();
+        }
+    };
+
+    run().catch((error) => {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to load dated tasks' });
+    });
+});
+
+r.post('/datedTasks/:date/:hour', (req, res) => {
+    const { MongoClient, ServerApiVersion } = require('mongodb');
+    const uri = "mongodb+srv://betarose:avengers21@micklebrain.uimrt.mongodb.net/";
+    const client = new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
+    });
+
+    const run = async () => {
+        try {
+            await client.connect();
+
+            const date = String(req.params.date || '');
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+                res.status(400).json({ error: 'Invalid date' });
+                return;
+            }
+
+            const hour = Number(req.params.hour);
+            if (!Number.isInteger(hour) || hour < 0 || hour > 23) {
+                res.status(400).json({ error: 'Invalid hour' });
+                return;
+            }
+
+            const text =
+                req.body && typeof req.body.text === 'string'
+                    ? req.body.text
+                    : '';
+            const rawTags = Array.isArray(req.body && req.body.tags)
+                ? req.body.tags
+                : [];
+            const tags = rawTags
+                .map((tag) => String(tag).trim().toLowerCase())
+                .filter((tag) => tag.length > 0);
+
+            const update = {
+                $set: {
+                    [`tasks.${date}.${hour}`]: { text, tags },
+                },
+            };
+
+            const result = await client
+                .db("personal")
+                .collection("timehack")
+                .updateOne({ _id: "datedTasks" }, update, { upsert: true });
+
+            res.json({ updated: result.modifiedCount || result.upsertedCount });
+        } finally {
+            await client.close();
+        }
+    };
+
+    run().catch((error) => {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to save dated task tags' });
     });
 });
 
