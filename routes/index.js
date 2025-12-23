@@ -358,6 +358,48 @@ r.get('/datedTasks', (req, res) => {
     });
 });
 
+r.post('/datedTasks', (req, res) => {
+    const { MongoClient, ServerApiVersion } = require('mongodb');
+    const uri = "mongodb+srv://betarose:avengers21@micklebrain.uimrt.mongodb.net/";
+    const client = new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
+    });
+
+    const run = async () => {
+        try {
+            await client.connect();
+
+            const tasks = req.body && req.body.tasks;
+            if (!tasks || typeof tasks !== 'object') {
+                res.status(400).json({ error: 'Invalid tasks payload' });
+                return;
+            }
+
+            const result = await client
+                .db("personal")
+                .collection("timehack")
+                .updateOne(
+                    { _id: "datedTasks" },
+                    { $set: { tasks } },
+                    { upsert: true }
+                );
+
+            res.json({ updated: result.modifiedCount || result.upsertedCount });
+        } finally {
+            await client.close();
+        }
+    };
+
+    run().catch((error) => {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to save dated tasks' });
+    });
+});
+
 r.post('/datedTasks/:date/:hour', (req, res) => {
     const { MongoClient, ServerApiVersion } = require('mongodb');
     const uri = "mongodb+srv://betarose:avengers21@micklebrain.uimrt.mongodb.net/";
