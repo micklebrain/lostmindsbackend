@@ -506,6 +506,10 @@ r.post('/datedTasks/:date/:hour', (req, res) => {
                 req.body && typeof req.body.text === 'string'
                     ? req.body.text
                     : '';
+            const order =
+                req.body && typeof req.body.order === 'number'
+                    ? req.body.order
+                    : null;
             const rawTags = Array.isArray(req.body && req.body.tags)
                 ? req.body.tags
                 : [];
@@ -513,9 +517,14 @@ r.post('/datedTasks/:date/:hour', (req, res) => {
                 .map((tag) => String(tag).trim().toLowerCase())
                 .filter((tag) => tag.length > 0);
 
+            const task = { text, tags };
+            if (order !== null && Number.isFinite(order)) {
+                task.order = order;
+            }
+
             const update = {
                 $set: {
-                    [`tasks.${date}.${hour}`]: { text, tags },
+                    [`tasks.${date}.${hour}`]: task,
                 },
             };
 
